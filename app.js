@@ -4,6 +4,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+
+mongoose.connect('mongodb://nemo:nemo@ds027345.mongolab.com:27345/heroku_xl886rhx');
 
 var routes = require('./routes/index');
 

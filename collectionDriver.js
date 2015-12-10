@@ -6,8 +6,13 @@ CollectionDriver = function(db) {
 
 CollectionDriver.prototype.getCollection = function(collectionName, callback) {
   this.db.collection(collectionName, function(err, collection) {
-    if (err) callback(err);
-    else callback(null, collection);
+    if (err) {
+      console.log("getCollection error:", err);
+      console.log(collection);
+      callback(err);
+    } else {
+      callback(null, collection);
+    }
   });
 };
 
@@ -27,11 +32,14 @@ CollectionDriver.prototype.findAll = function(collectionName, callback) {
 //find a specific object
 CollectionDriver.prototype.get = function(collectionName, id, callback) {
   this.getCollection(collectionName, function(err, collection) {
+    console.log("FIND ONE: err:", err, "collection:", collection);
     if (err) callback(err);
     else {
       var checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
       if (!checkForHexRegExp.test(id)) callback({ error: "invalid id" });
       else collection.findOne({ '_id': ObjectID(id) }, function(err, doc) {
+        console.log("OK");
+        console.log("err:", err, "doc:", doc);
        	if (err) callback(err);
        	else callback(null, doc);
       });

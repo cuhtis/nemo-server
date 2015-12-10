@@ -6,35 +6,30 @@ var CollectionDriver = require('../collectionDriver').CollectionDriver;
 var collectionDriver = new CollectionDriver(mongoose.connection.db);
 
 router.get('/:collection', function(req, res) {
+  console.log("FIND ALL");
   var params = req.params;
   collectionDriver.findAll(req.params.collection, function(error, objs) {
     if (error) { res.send(400, error); }
 	  else { 
-	    if (req.accepts('html')) {
-    	  res.render('data',{objects: objs, collection: req.params.collection});
-      } else {
-	      res.set('Content-Type','application/json');
-        res.status(200).send(objs);
-      }
+      res.set('Content-Type','application/json');
+      res.status(200).send(objs);
     }
  	});
 });
  
 router.get('/:collection/:entity', function(req, res) {
+  console.log("FIND ONE");
   var params = req.params;
   var entity = params.entity;
   var collection = params.collection;
-  if (entity) {
-    collectionDriver.get(collection, entity, function(err, objs) {
-      if (err) { res.status(400).send(err); }
-      else { res.status(200).send(objs); }
-    });
-  } else {
-    res.status(400).send({error: 'bad url', url: req.url});
-  }
+  collectionDriver.get(collection, entity, function(err, objs) {
+    if (err) { res.status(400).send(err); }
+    else { res.status(200).send(objs); }
+  });
 });
 
 router.post('/:collection', function(req, res) {
+  console.log("CREATE");
   var object = req.body;
   var collection = req.params.collection;
   collectionDriver.save(collection, object, function(err,docs) {
@@ -44,6 +39,8 @@ router.post('/:collection', function(req, res) {
 });
 
 router.put('/:collection/:entity', function(req, res) {
+  console.log("UPDATE");
+  console.log (req.params);
   var params = req.params;
   var entity = params.entity;
   var collection = params.collection;
@@ -59,6 +56,7 @@ router.put('/:collection/:entity', function(req, res) {
 });
 
 router.delete('/:collection/:entity', function(req, res) {
+  console.log("DELETE");
   var params = req.params;
   var entity = params.entity;
   var collection = params.collection;
