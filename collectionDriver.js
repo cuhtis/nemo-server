@@ -1,4 +1,4 @@
-var ObjectID = require('mongoose').ObjectID;
+var ObjectID = require('mongoose').Types.ObjectId;
 
 CollectionDriver = function(db) {
   this.db = db;
@@ -80,7 +80,7 @@ CollectionDriver.prototype.delete = function(collectionName, entityId, callback)
   this.getCollection(collectionName, function(err, collection) {
     if (err) callback(err);
     else {
-      collection.remove({'_id':ObjectID(entityId)}, function(err, doc) {
+      collection.remove({'_id': ObjectID(entityId)}, function(err, doc) {
         if (err) callback(err);
         else callback(null, doc);
       });
