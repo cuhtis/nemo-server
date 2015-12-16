@@ -2,14 +2,24 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 
+var FileDriver = require('../fileDriver').FileDriver;
+var fileDriver = new FileDriver(mongoose.connection.db);
 var CollectionDriver = require('../collectionDriver').CollectionDriver;
 var collectionDriver = new CollectionDriver(mongoose.connection.db);
+
+router.post('/files', function(req,res) {
+  fileDriver.handleUploadRequest(req,res);
+});
+
+router.get('/files/:id', function(req, res) {
+  fileDriver.handleGet(req,res);
+}); 
 
 router.get('/:collection', function(req, res) {
   console.log("FIND ALL");
   var params = req.params;
   collectionDriver.findAll(req.params.collection, function(error, objs) {
-    if (error) { res.send(400, error); }
+    if (error) { res.status(400).send(error); }
 	  else { 
       res.set('Content-Type','application/json');
       res.status(200).send(objs);
